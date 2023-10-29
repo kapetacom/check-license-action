@@ -32,5 +32,5 @@ runs:
         if [ "${{ inputs.add }}" == "true" ]; then
           EXTRA_ARGS=""
         fi  
-        ~/go/bin/addlicense -c ${{ inputs.holder }} -v -s=only -l ${{ inputs.license }} ${EXTRA_ARGS} ${{ inputs.sources }}
+        ~/go/bin/addlicense -c "${{ inputs.holder }}" -v -s=only -l "${{ inputs.license }}" $EXTRA_ARGS ${{ inputs.sources }} || exit 1
       shell: bash
