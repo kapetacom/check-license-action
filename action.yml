@@ -1,0 +1,36 @@
+name: 'License Checking'
+description: 'Uses addLicense to add or check for licenses'
+inputs:
+  holder:
+    description: 'Copyright holder'
+    required: true
+  license:
+    description: 'The SPDX ID for the license to check for'
+    required: true
+  sources:
+    description: 'Glob that points to the files to check / add licenses to'
+    required: true
+  add:
+    description: 'Set to "true" to add the license if it is not present'
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: "1.20"
+
+    - name: Install addlicense
+      run: go install github.com/google/addlicense@latest
+      shell: bash
+
+    - name: Run addlicense
+      run: |
+        EXTRA_ARGS="-check"
+        if [ "${{ inputs.add }}" == "true" ]; then
+          EXTRA_ARGS=""
+        fi  
+        ~/go/bin/addlicense -c ${{ inputs.holder }} -v -s=only -l ${{ inputs.license }} ${EXTRA_ARGS} ${{ inputs.sources }}
+      shell: bash
